@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-.card-btn {
+.card-img {
   zoom: 0.3;
   margin-top: 1rem;
   margin-right: 1rem;
@@ -22,8 +22,8 @@
 }
 
 .board-container {
-  height: 30vmax;
-  width: 30vmax;
+  height: 33vmax;
+  width: 33vmax;
   border: 2px solid black;
 }
 
