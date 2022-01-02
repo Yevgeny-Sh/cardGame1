@@ -28,26 +28,28 @@ export default function Game() {
     const dealPlayersHand = () => {
       let player1 = [];
       let player2 = [];
-      // if (deck.length) {
-      for (let i = 0; i < 6; i++) {
-        player1.push(deck[i]);
+      if (deck.length) {
+        for (let i = 0; i < 6; i++) {
+          player1.push(deck[i]);
+        }
+        for (let i = 6; i < 12; i++) {
+          player2.push(deck[i]);
+        }
+        setPlayer1Hand(() => player1);
+        // setPlayer2Hand(player2);
       }
-      for (let i = 6; i < 12; i++) {
-        player2.push(deck[i]);
-      }
-      setPlayer1Hand(player1);
-      // setPlayer2Hand(player2);
-      //  }
     };
     const myAsyncCallback = async () => {
       await getDeck();
       dealPlayersHand();
     };
     myAsyncCallback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //renders player 1 hand.
+  //renders player 1 hand..
   const renderPlayersCards = () => {
+    console.log(player1Hand);
     const cards = player1Hand.map((elm) => {
       return (
         <span key={elm.code} onClick={handleCardChoice}>
