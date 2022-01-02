@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+.app-main-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.card-btn {
+  zoom: 0.3;
+  margin-top: 1rem;
+  margin-right: 1rem;
+}
+
+.card-btn:hover {
+  transform: rotate(-15deg);
+  transition-duration: 0.3s;
+}
+
+.board-container {
+  height: 30vmax;
+  width: 30vmax;
+  border: 2px solid black;
+}
+
+/*  mobile version */
+@media (max-width: 600px) {
+}
