@@ -9,7 +9,6 @@ import Board from "./Board";
 export default function Game() {
   //deck has array of 52 card objects..
   const [deck, setDeck] = useState([]);
-
   const [player1Hand, setPlayer1Hand] = useState([]);
   const [player2Hand, setPlayer2Hand] = useState([]);
   const [table, setTable] = useState([]);
@@ -71,11 +70,11 @@ export default function Game() {
     return cards;
   };
 
+  //this is first attck from player
   const handleCardChoice = (event) => {
     let newArr = player1Hand;
     newArr.forEach((element) => {
       if (element.image === event.target.src) {
-        // newArr.pop(element);
         let index = newArr.indexOf(element);
         newArr.splice(index, 1);
         setPlayer1Hand(newArr);
@@ -83,6 +82,70 @@ export default function Game() {
       }
     });
   };
+
+  //first defence from ai
+  const uiDefend = () => {
+    let counterOfMatchesToThrow = 0;
+    let indexOfMatchToThrow = -1;
+    let selectedCardToThrow = {};
+    if (table.length) {
+      let cardOnTable = table[0];
+      let cardOnTableNumValue = table[0].value;
+      //need to compare values of jacks and kings exc..
+      switch (cardOnTableNumValue) {
+        case "JACK":
+          cardOnTableNumValue = 11;
+          break;
+        case "QUEEN":
+          cardOnTableNumValue = 12;
+          break;
+        case "KING":
+          cardOnTableNumValue = 13;
+          break;
+        case "ACE":
+          cardOnTableNumValue = 14;
+          break;
+        default:
+          cardOnTableNumValue = table[0].value;
+      }
+      player2Hand.forEach((elem) => {
+        let numValue = 1;
+        switch (elem.value) {
+          case "JACK":
+            numValue = 11;
+            break;
+          case "QUEEN":
+            numValue = 12;
+            break;
+          case "KING":
+            numValue = 13;
+            break;
+          case "ACE":
+            numValue = 14;
+            break;
+          default:
+            numValue = elem.value;
+        }
+        //find a card of same suit and bigger value to throw
+        if (elem.suit === cardOnTable.suit && numValue > cardOnTableNumValue) {
+          console.log("yeee");
+          counterOfMatchesToThrow++;
+          indexOfMatchToThrow = player2Hand.indexOf(elem);
+        }
+      });
+    }
+    if (counterOfMatchesToThrow === 1) {
+      selectedCardToThrow = player2Hand[indexOfMatchToThrow];
+      console.log(selectedCardToThrow);
+
+      //if found matching card ui needs to throw card
+      let newArrOfUiCards = player2Hand;
+      newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+      setPlayer2Hand(newArrOfUiCards);
+      setTable((prevArray) => [...prevArray, selectedCardToThrow]);
+    }
+  };
+  uiDefend();
 
   return (
     <div>
