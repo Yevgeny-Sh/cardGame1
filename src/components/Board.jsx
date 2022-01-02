@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Board(props) {
   const [table, setTable] = useState(props.cardsOntable);
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  //const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  //.
   useEffect(() => {
     setTable(props.cardsOntable);
-  });
+  }, [props.cardsOntable]);
 
   const renderTable = () => {
     const tableCards = table.map((elm) => {
@@ -17,7 +16,6 @@ export default function Board(props) {
         </span>
       );
     });
-    //forceUpdate();
     return tableCards;
   };
 

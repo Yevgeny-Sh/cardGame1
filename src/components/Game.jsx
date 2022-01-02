@@ -11,7 +11,7 @@ export default function Game() {
   const [deck, setDeck] = useState([]);
 
   const [player1Hand, setPlayer1Hand] = useState([]);
-  const [player2Hand, setPlayer2Hand] = useState([]);
+  //const [player2Hand, setPlayer2Hand] = useState([]);
   const [table, setTable] = useState([]);
 
   //const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -36,7 +36,7 @@ export default function Game() {
         player2.push(deck[i]);
       }
       setPlayer1Hand(() => player1);
-      setPlayer2Hand(player2);
+      //setPlayer2Hand(player2);
     }
   }, [deck]);
 
