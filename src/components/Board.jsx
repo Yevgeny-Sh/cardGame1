@@ -15,7 +15,7 @@ export default function Board(props) {
           <img className="card-img" src={elm.image} alt="tableCard"></img>
         </span>
       );
-    });
+    }, []);
     return tableCards;
   };
 

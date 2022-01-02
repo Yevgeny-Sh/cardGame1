@@ -11,10 +11,8 @@ export default function Game() {
   const [deck, setDeck] = useState([]);
 
   const [player1Hand, setPlayer1Hand] = useState([]);
-  //const [player2Hand, setPlayer2Hand] = useState([]);
+  const [player2Hand, setPlayer2Hand] = useState([]);
   const [table, setTable] = useState([]);
-
-  //const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const getDeck = async () => {
     const response = await DeckOfCards.get();
@@ -24,6 +22,13 @@ export default function Game() {
     );
     setDeck(data.cards);
   };
+
+  useEffect(() => {
+    const myAsyncDataFetch = async () => {
+      await getDeck();
+    };
+    myAsyncDataFetch();
+  }, []);
 
   useEffect(() => {
     let player1 = [];
@@ -36,19 +41,25 @@ export default function Game() {
         player2.push(deck[i]);
       }
       setPlayer1Hand(() => player1);
-      //setPlayer2Hand(player2);
+      setPlayer2Hand(() => player2);
     }
   }, [deck]);
-
-  useEffect(() => {
-    const myAsyncDataFetch = async () => {
-      await getDeck();
-    };
-    myAsyncDataFetch();
-  }, []);
   //renders player 1 hand..
-  const renderPlayersCards = () => {
+  const renderPlayer1Cards = () => {
     const cards = player1Hand.map((elm) => {
+      return (
+        <span key={elm.code} onClick={handleCardChoice}>
+          <button>
+            <img className="card-img" src={elm.image} alt="card" />
+          </button>
+        </span>
+      );
+    });
+    return cards;
+  };
+  //renders player 2 hand..
+  const renderPlayer2Cards = () => {
+    const cards = player2Hand.map((elm) => {
       return (
         <span key={elm.code} onClick={handleCardChoice}>
           <button>
@@ -64,7 +75,9 @@ export default function Game() {
     let newArr = player1Hand;
     newArr.forEach((element) => {
       if (element.image === event.target.src) {
-        newArr.pop(element);
+        // newArr.pop(element);
+        let index = newArr.indexOf(element);
+        newArr.splice(index, 1);
         setPlayer1Hand(newArr);
         setTable((prevArray) => [...prevArray, element]);
       }
@@ -73,8 +86,9 @@ export default function Game() {
 
   return (
     <div>
-      {renderPlayersCards()}
+      {renderPlayer1Cards()}
       <Board cardsOntable={table}></Board>
+      {renderPlayer2Cards()}
     </div>
   );
 }

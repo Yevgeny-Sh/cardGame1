@@ -16,14 +16,14 @@
   margin-right: 1rem;
 }
 
-.card-btn:hover {
+.card-img:hover {
   transform: rotate(-15deg);
   transition-duration: 0.3s;
 }
 
 .board-container {
-  height: 33vmax;
-  width: 33vmax;
+  height: 40vmin;
+  width: 40vmin;
   border: 2px solid black;
 }
 
