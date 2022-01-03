@@ -81,9 +81,8 @@ export default function Game() {
     });
     //take card drom deck after throw
     let drawnCardFromDeck = deck.pop();
-    console.log(drawnCardFromDeck);
     let prePlayer1Hand = player1Hand;
-    // setPlayer1Hand(...prePlayer1Hand, drawnCardFromDeck);
+    setPlayer1Hand([...prePlayer1Hand, drawnCardFromDeck]);
   };
 
   //ui defence functons
@@ -175,6 +174,7 @@ export default function Game() {
   return (
     <div>
       {renderPlayer1Cards()}
+      <p>cards in deck:{deck.length - 12}</p>
       <Board cardsOntable={table}></Board>
       {renderPlayer2Cards()}
     </div>
