@@ -12,6 +12,8 @@ export default function Game() {
   const [table, setTable] = useState([]);
   const [winner, setWinner] = useState("");
 
+  const STRONG_SUIT = "DIAMONDS";
+
   const getDeck = async () => {
     const response = await DeckOfCards.get();
     const deck_id = response.data.deck_id;
@@ -48,7 +50,6 @@ export default function Game() {
       setPlayer2Hand(() => player2);
     }
     setDeck(newArr);
-    console.log(deck);
   }, [deck]);
   //renders player 1 hand..
   const renderPlayer1Cards = () => {
@@ -91,7 +92,7 @@ export default function Game() {
       });
     }
     //take card from deck after throw
-    if (deck.length > 0) {
+    if (deck.length > 0 && player1Hand.length < 6) {
       let drawnCardFromDeck = deck.pop();
       let prePlayer1Hand = player1Hand;
       setPlayer1Hand([...prePlayer1Hand, drawnCardFromDeck]);
@@ -165,12 +166,13 @@ export default function Game() {
             newArrOfUiCards.splice(indexOfMatchToThrow, 1);
             setPlayer2Hand(newArrOfUiCards);
             //draw new card from deck
-            if (deck.length > 0) {
+            if (deck.length > 0 && player2Hand.length < 6) {
               let drawnCardFromDeck = deck.pop();
               let prePlayer2Hand = player2Hand;
               setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
             }
             setTable([]);
+            //ui found mor then 1 card to defend with
           } else if (counterOfMatchesToThrow > 1) {
             //throw the first one for now
             //TODO make more complicated logic later
@@ -178,17 +180,38 @@ export default function Game() {
             newArrOfUiCards.splice(indexOfMatchToThrow, 1);
             setPlayer2Hand(newArrOfUiCards);
             //draw new card from deck
-            if (deck.length > 0) {
+            if (deck.length > 0 && player2Hand.length < 6) {
               let drawnCardFromDeck = deck.pop();
               let prePlayer2Hand = player2Hand;
               setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
             }
             setTable([]);
             //!draw new card from deck repeats itself 3 times, try to extract to function
+            //if no cards found to defend
           } else if (counterOfMatchesToThrow === 0) {
+            //! check for strong suit
+            if (table[0].suit !== STRONG_SUIT) {
+              player2Hand.forEach((element) => {
+                if (element.suit === STRONG_SUIT) {
+                  counterOfMatchesToThrow++;
+                  indexOfMatchToThrow = player2Hand.indexOf(element);
+                  let newArrOfUiCards = player2Hand;
+                  newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+                  setPlayer2Hand(newArrOfUiCards);
+                  //draw new card from deck
+                  if (deck.length > 0 && player2Hand.length < 6) {
+                    let drawnCardFromDeck = deck.pop();
+                    let prePlayer2Hand = player2Hand;
+                    setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
+                  }
+                  setTable([]);
+                }
+              });
+            }
             let newArr = player2Hand;
             newArr.push(table[0]);
             //i can delete this line and it still works for some reason
+            //because i have useEffect that sets state with newArr?
             setPlayer2Hand(newArr);
             setTable([]);
           }
@@ -202,10 +225,10 @@ export default function Game() {
 
   //!check if there is winnr function
   const checkWinner = () => {
-    if (player1Hand.length) {
+    if (player1Hand.length > 0 && player2Hand.length === 0) {
       setWinner("player2");
       return;
-    } else if (player2Hand.length) {
+    } else if (player2Hand.length > 0 && player1Hand.length === 0) {
       setWinner("player1");
       return;
     }
@@ -213,8 +236,9 @@ export default function Game() {
 
   return (
     <div>
-      {renderPlayer1Cards()}
+      strong suit is :{STRONG_SUIT}
       <p>cards in deck:{deck.length}</p>
+      {renderPlayer1Cards()}
       <Board cardsOntable={table}></Board>
       {renderPlayer2Cards()}
       {winner.length > 0 && <div className="winner">winner is {winner}</div>}

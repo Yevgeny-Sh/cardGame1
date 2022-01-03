@@ -79,10 +79,10 @@ const tryToDefend = () => {
 };
 
 const checkWinner = () => {
-  if (player1Hand.length) {
+  if (player1Hand.length > 0 && player2Hand.length === 0) {
     setWinner("player2");
     return;
-  } else if (player2Hand.length) {
+  } else if (player2Hand.length > 0 && player1Hand.length === 0) {
     setWinner("player1");
     return;
   }
