@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 export default function Board(props) {
   const [cardsOntable, setCardsOntable] = useState(props.cardsOntable);
-  //const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
     setCardsOntable(props.cardsOntable);

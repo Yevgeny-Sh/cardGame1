@@ -45,10 +45,11 @@ export default function Game() {
         player2.push(deck[i]);
         newArr.splice(i, 1);
       }
-      //pop from deck here
+
       setPlayer1Hand(() => player1);
       setPlayer2Hand(() => player2);
     }
+    //pop from deck here
     setDeck(newArr);
   }, [deck]);
   //renders player 1 hand..
@@ -162,6 +163,9 @@ export default function Game() {
           });
           //assuming ui found a single card to defend with
           if (counterOfMatchesToThrow === 1) {
+            console.log("= 1");
+            console.log("defended with");
+            console.log(player2Hand[indexOfMatchToThrow]);
             let newArrOfUiCards = player2Hand;
             newArrOfUiCards.splice(indexOfMatchToThrow, 1);
             setPlayer2Hand(newArrOfUiCards);
@@ -178,12 +182,11 @@ export default function Game() {
             //TODO make more complicated logic later
             let newArrOfUiCards = player2Hand;
             newArrOfUiCards.splice(indexOfMatchToThrow, 1);
-            setPlayer2Hand(newArrOfUiCards);
+            //setPlayer2Hand(newArrOfUiCards);
             //draw new card from deck
             if (deck.length > 0 && player2Hand.length < 6) {
               let drawnCardFromDeck = deck.pop();
-              let prePlayer2Hand = player2Hand;
-              setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
+              setPlayer2Hand([...newArrOfUiCards, drawnCardFromDeck]);
             }
             setTable([]);
             //!draw new card from deck repeats itself 3 times, try to extract to function
@@ -191,29 +194,42 @@ export default function Game() {
           } else if (counterOfMatchesToThrow === 0) {
             //! check for strong suit
             if (table[0].suit !== STRONG_SUIT) {
-              player2Hand.forEach((element) => {
-                if (element.suit === STRONG_SUIT) {
-                  counterOfMatchesToThrow++;
-                  indexOfMatchToThrow = player2Hand.indexOf(element);
-                  let newArrOfUiCards = player2Hand;
-                  newArrOfUiCards.splice(indexOfMatchToThrow, 1);
-                  setPlayer2Hand(newArrOfUiCards);
-                  //draw new card from deck
-                  if (deck.length > 0 && player2Hand.length < 6) {
-                    let drawnCardFromDeck = deck.pop();
-                    let prePlayer2Hand = player2Hand;
-                    setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
-                  }
-                  setTable([]);
-                }
+              //!something here doesnt work
+              // player2Hand.forEach((element) => {
+              //   if (element.suit === STRONG_SUIT) {
+              //     indexOfMatchToThrow = player2Hand.indexOf(element);
+              //     let newArrOfUiCards = player2Hand;
+              //     newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+              //     setPlayer2Hand(newArrOfUiCards);
+              //     setTable([]);
+              //     //draw card from deck
+              //     let drawnCardFromDeck = deck.pop();
+              //     let prePlayer2Hand = player2Hand;
+              //     setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
+              //     //drawCardFromDeckForPlayer2();
+              //   }
+              // });
+              let FoundStrongSuitCard = player2Hand.find((elm) => {
+                return elm.suit === STRONG_SUIT;
               });
+              indexOfMatchToThrow = player2Hand.indexOf(FoundStrongSuitCard);
+              let newArrOfUiCards = player2Hand;
+              newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+              //now draw card
+              if (deck.length > 0 && player2Hand.length < 6) {
+                let drawnCardFromDeck = deck.pop();
+                setPlayer2Hand([...newArrOfUiCards, drawnCardFromDeck]);
+              }
+
+              setTable([]);
             }
-            let newArr = player2Hand;
-            newArr.push(table[0]);
-            //i can delete this line and it still works for some reason
-            //because i have useEffect that sets state with newArr?
-            setPlayer2Hand(newArr);
-            setTable([]);
+            //!what does that block do?
+            // if (indexOfMatchToThrow <= 0) {
+            //   let newArr = player2Hand;
+            //   newArr.push(table[0]);
+            //   setPlayer2Hand(newArr);
+            //   setTable([]);
+            // }
           }
         }
       } else {
@@ -233,6 +249,19 @@ export default function Game() {
       return;
     }
   };
+
+  // const drawCardFromDeckForPlayer2 = () => {
+  //   if (deck.length > 0 && player2Hand.length < 6) {
+  //     console.log("drawing card after defence");
+  //     //!draw card doesnt work
+  //     let drawnCardFromDeck = deck.pop();
+  //     let prePlayer2Hand = player2Hand;
+  //     //setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
+  //     setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
+  //     console.log("draw successfull??");
+  //     console.log(player2Hand);
+  //   }
+  // };
 
   return (
     <div>
