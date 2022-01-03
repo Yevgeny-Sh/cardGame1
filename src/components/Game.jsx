@@ -21,10 +21,10 @@ export default function Game() {
   };
 
   useEffect(() => {
-    const myAsyncDataFetch = async () => {
+    const AsyncDataFetch = async () => {
       await getDeck();
     };
-    myAsyncDataFetch();
+    AsyncDataFetch();
   }, []);
 
   useEffect(() => {
@@ -37,6 +37,7 @@ export default function Game() {
       for (let i = 6; i < 12; i++) {
         player2.push(deck[i]);
       }
+      //pop from deck here
       setPlayer1Hand(() => player1);
       setPlayer2Hand(() => player2);
     }
@@ -131,45 +132,45 @@ export default function Game() {
     return numValue;
   };
 
-  const tryToDefend = () => {
-    let counterOfMatchesToThrow = 0;
-    let indexOfMatchToThrow = -1;
-    if (table.length && player2Hand.length) {
-      player2Hand.forEach((element) => {
-        if (
-          element.suit === table[0].suit &&
-          getNumValueOfUiHand(element) > getNumValueOfTableCard()
-        ) {
-          console.log("found card to defend with");
-          console.log(element);
-          counterOfMatchesToThrow++;
-          indexOfMatchToThrow = player2Hand.indexOf(element);
-        }
-      });
-      //assuming ui found a single card to defend with
-      if (counterOfMatchesToThrow === 1) {
-        let newArrOfUiCards = player2Hand;
-        newArrOfUiCards.splice(indexOfMatchToThrow, 1);
-        setPlayer2Hand(newArrOfUiCards);
-        setTable([]);
-      } else if (counterOfMatchesToThrow === 0) {
-        let newArr = player2Hand;
-        newArr.push(table[0]);
-        setTable([]);
-      } else if (counterOfMatchesToThrow > 1) {
-        //throw the first one for now
-        //TODO make more complicated logic later
-        let newArrOfUiCards = player2Hand;
-        newArrOfUiCards.splice(indexOfMatchToThrow, 1);
-        setPlayer2Hand(newArrOfUiCards);
-        setTable([]);
-      }
-    }
-  };
-
   useEffect(() => {
+    const tryToDefend = () => {
+      let counterOfMatchesToThrow = 0;
+      let indexOfMatchToThrow = -1;
+      if (table.length && player2Hand.length) {
+        player2Hand.forEach((element) => {
+          if (
+            element.suit === table[0].suit &&
+            getNumValueOfUiHand(element) > getNumValueOfTableCard()
+          ) {
+            console.log("found card to defend with");
+            console.log(element);
+            counterOfMatchesToThrow++;
+            indexOfMatchToThrow = player2Hand.indexOf(element);
+          }
+        });
+        //assuming ui found a single card to defend with
+        if (counterOfMatchesToThrow === 1) {
+          let newArrOfUiCards = player2Hand;
+          newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+          setPlayer2Hand(newArrOfUiCards);
+          setTable([]);
+        } else if (counterOfMatchesToThrow === 0) {
+          let newArr = player2Hand;
+          newArr.push(table[0]);
+          setTable([]);
+        } else if (counterOfMatchesToThrow > 1) {
+          //throw the first one for now
+          //TODO make more complicated logic later
+          let newArrOfUiCards = player2Hand;
+          newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+          setPlayer2Hand(newArrOfUiCards);
+          setTable([]);
+        }
+      }
+    };
+
     tryToDefend();
-  }, [table]);
+  });
 
   return (
     <div>
