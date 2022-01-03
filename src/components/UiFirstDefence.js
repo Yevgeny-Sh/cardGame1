@@ -77,3 +77,13 @@ const tryToDefend = () => {
     }
   }
 };
+
+const checkWinner = () => {
+  if (player1Hand.length) {
+    setWinner("player2");
+    return;
+  } else if (player2Hand.length) {
+    setWinner("player1");
+    return;
+  }
+};
