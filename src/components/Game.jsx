@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DeckOfCards from "./DeckOfCards";
-//import Board from "./components/Board";
-//import Board from "./Board";
-
 import axios from "axios";
 import "./style.css";
 import Board from "./Board";
+
 export default function Game() {
   //deck has array of 52 card objects..
   const [deck, setDeck] = useState([]);
@@ -61,9 +59,9 @@ export default function Game() {
     const cards = player2Hand.map((elm) => {
       return (
         <span key={elm.code} onClick={handleCardChoice}>
-          <button>
-            <img className="card-img" src={elm.image} alt="card" />
-          </button>
+          {/* <button> */}
+          <img className="card-img" src={elm.image} alt="card" />
+          {/* </button> */}
         </span>
       );
     });
@@ -81,15 +79,16 @@ export default function Game() {
         setTable((prevArray) => [...prevArray, element]);
       }
     });
+    //take card drom deck after throw
+    let drawnCardFromDeck = deck.pop();
+    console.log(drawnCardFromDeck);
+    let prePlayer1Hand = player1Hand;
+    // setPlayer1Hand(...prePlayer1Hand, drawnCardFromDeck);
   };
 
-  //first defence from ai
-  const uiDefend = () => {
-    let counterOfMatchesToThrow = 0;
-    let indexOfMatchToThrow = -1;
-    let selectedCardToThrow = {};
+  //ui defence functons
+  const getNumValueOfTableCard = () => {
     if (table.length) {
-      let cardOnTable = table[0];
       let cardOnTableNumValue = table[0].value;
       //need to compare values of jacks and kings exc..
       switch (cardOnTableNumValue) {
@@ -106,46 +105,72 @@ export default function Game() {
           cardOnTableNumValue = 14;
           break;
         default:
-          cardOnTableNumValue = table[0].value;
+          cardOnTableNumValue = Number(table[0].value);
       }
-      player2Hand.forEach((elem) => {
-        let numValue = 1;
-        switch (elem.value) {
-          case "JACK":
-            numValue = 11;
-            break;
-          case "QUEEN":
-            numValue = 12;
-            break;
-          case "KING":
-            numValue = 13;
-            break;
-          case "ACE":
-            numValue = 14;
-            break;
-          default:
-            numValue = elem.value;
-        }
-        //find a card of same suit and bigger value to throw
-        if (elem.suit === cardOnTable.suit && numValue > cardOnTableNumValue) {
-          console.log("yeee");
-          counterOfMatchesToThrow++;
-          indexOfMatchToThrow = player2Hand.indexOf(elem);
-        }
-      });
-    }
-    if (counterOfMatchesToThrow === 1) {
-      selectedCardToThrow = player2Hand[indexOfMatchToThrow];
-      console.log(selectedCardToThrow);
-
-      //if found matching card ui needs to throw card
-      let newArrOfUiCards = player2Hand;
-      newArrOfUiCards.splice(indexOfMatchToThrow, 1);
-      setPlayer2Hand(newArrOfUiCards);
-      setTable((prevArray) => [...prevArray, selectedCardToThrow]);
+      return cardOnTableNumValue;
     }
   };
-  uiDefend();
+
+  const getNumValueOfUiHand = (elem) => {
+    let numValue = elem.value;
+    switch (elem.value) {
+      case "JACK":
+        numValue = 11;
+        break;
+      case "QUEEN":
+        numValue = 12;
+        break;
+      case "KING":
+        numValue = 13;
+        break;
+      case "ACE":
+        numValue = 14;
+        break;
+      default:
+        numValue = Number(elem.value);
+    }
+    return numValue;
+  };
+
+  const tryToDefend = () => {
+    let counterOfMatchesToThrow = 0;
+    let indexOfMatchToThrow = -1;
+    if (table.length && player2Hand.length) {
+      player2Hand.forEach((element) => {
+        if (
+          element.suit === table[0].suit &&
+          getNumValueOfUiHand(element) > getNumValueOfTableCard()
+        ) {
+          console.log("found card to defend with");
+          console.log(element);
+          counterOfMatchesToThrow++;
+          indexOfMatchToThrow = player2Hand.indexOf(element);
+        }
+      });
+      //assuming ui found a single card to defend with
+      if (counterOfMatchesToThrow === 1) {
+        let newArrOfUiCards = player2Hand;
+        newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+        setPlayer2Hand(newArrOfUiCards);
+        setTable([]);
+      } else if (counterOfMatchesToThrow === 0) {
+        let newArr = player2Hand;
+        newArr.push(table[0]);
+        setTable([]);
+      } else if (counterOfMatchesToThrow > 1) {
+        //throw the first one for now
+        //TODO make more complicated logic later
+        let newArrOfUiCards = player2Hand;
+        newArrOfUiCards.splice(indexOfMatchToThrow, 1);
+        setPlayer2Hand(newArrOfUiCards);
+        setTable([]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    tryToDefend();
+  }, [table]);
 
   return (
     <div>
