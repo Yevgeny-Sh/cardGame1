@@ -52,7 +52,7 @@ export default function Game() {
       `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=52`
     );
 
-    setDeck(data.cards.splice(0, 24));
+    setDeck(data.cards);
   };
 
   useEffect(() => {
@@ -69,6 +69,7 @@ export default function Game() {
     let player1 = [];
     let player2 = [];
     if (deck.length) {
+      console.log(JSON.stringify(deck));
       // i deal from the bottom of the deck
       for (let i = 0; i < 6; i++) {
         player1.push(deck[i]);
@@ -100,6 +101,7 @@ export default function Game() {
   };
   // renders player 2 hand..
   const renderPlayer2Cards = () => {
+    console.log(player2Hand);
     const cards = player2Hand.map((elm) => {
       return (
         <span key={elm.code} onClick={handleCardChoice}>
