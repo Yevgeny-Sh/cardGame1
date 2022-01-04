@@ -21,6 +21,10 @@
   transition-duration: 0.3s;
 }
 
+.suit-img {
+  zoom: 0.05;
+}
+
 .board-container {
   height: 40vmin;
   width: 40vmin;
