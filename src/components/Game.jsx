@@ -13,8 +13,6 @@ export default function Game() {
   const [player1Hand, setPlayer1Hand] = useState([]);
   const [player2Hand, setPlayer2Hand] = useState([]);
   const [table, setTable] = useState([]);
-  //setTurn - is deleted until i fix bug with ai attack
-  //const [turn] = useState("player1");
   const [strongSuit, setStrongSuit] = useState("");
   const [winner, setWinner] = useState("");
 
@@ -39,11 +37,10 @@ export default function Game() {
       case "SPADES":
         suitImg = spades;
         break;
+      default:
     }
     return <img className="suit-img" src={suitImg} alt="suit"></img>;
   };
-
-  //let arr = [♣, ♦, ♠, ♥];
 
   const getDeck = async () => {
     const response = await DeckOfCards.get();
@@ -69,7 +66,6 @@ export default function Game() {
     let player1 = [];
     let player2 = [];
     if (deck.length) {
-      console.log(JSON.stringify(deck));
       // i deal from the bottom of the deck
       for (let i = 0; i < 6; i++) {
         player1.push(deck[i]);
