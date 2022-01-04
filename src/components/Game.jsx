@@ -3,13 +3,14 @@ import DeckOfCards from "./DeckOfCards";
 import axios from "axios";
 import "./style.css";
 import Board from "./Board";
-
 export default function Game() {
   //deck has array of 52 card objects..
   const [deck, setDeck] = useState([]);
   const [player1Hand, setPlayer1Hand] = useState([]);
   const [player2Hand, setPlayer2Hand] = useState([]);
   const [table, setTable] = useState([]);
+  //setTurn - is deleted until i fix bug with ui attack
+  //const [turn] = useState("player1");
   const [winner, setWinner] = useState("");
 
   const STRONG_SUIT = "DIAMONDS";
@@ -70,9 +71,7 @@ export default function Game() {
     const cards = player2Hand.map((elm) => {
       return (
         <span key={elm.code} onClick={handleCardChoice}>
-          {/* <button> */}
           <img className="card-img" src={elm.image} alt="card" />
-          {/* </button> */}
         </span>
       );
     });
@@ -81,18 +80,24 @@ export default function Game() {
 
   //this is first attck from player
   const handleCardChoice = (event) => {
+    // if (turn === "player1")
+
     if (player1Hand.length > 0) {
       let newArr = player1Hand;
       newArr.forEach((element) => {
         if (element.image === event.target.src) {
           let index = newArr.indexOf(element);
+          console.log("player1 attacked with:", newArr[index]);
           newArr.splice(index, 1);
-          setPlayer1Hand(newArr);
-          setTimeout(() => {
-            setTable((prevArray) => [...prevArray, element]);
-          }, 500);
+          //line below commented out -seems optional
+          // setPlayer1Hand(newArr);
+          setTable((prevArray) => [...prevArray, element]);
         }
       });
+      //!no ui play (until i fix bugs)
+      // if (player2Hand.length < 7) {
+      //   setTurn(`player2`);
+      // }
     }
     //take card from deck after throw
     if (deck.length > 0 && player1Hand.length < 6) {
@@ -245,9 +250,30 @@ export default function Game() {
     tryToDefend();
     //end of useEffect
   });
+  // useEffect(() => {
+  //   const uiAttack = () => {
+  //     if (turn === `player2`) {
+  //       setTable([]);
+  //       console.log("player 2 turn");
+  //       //for now ui attack with random card
+  //       let randomIndex = Math.floor(Math.random() * player2Hand.length);
+  //       let uiChosenCard = player2Hand[randomIndex];
+  //       let currCardsOnTable = table;
+  //       currCardsOnTable.push(uiChosenCard);
+  //       player2Hand.splice(randomIndex, 1);
+  //       setTable(currCardsOnTable);
+  //       console.log("sets turn back to player 1");
+  //       setTurn(`player1`);
+  //       //setTable(currCardsOnTable);
+  //     }
+  //   };
+  //   if (turn === `player2`) {
+  //     //uiAttack();
+  //   }
+  // }, [turn, player2Hand, table]);
 
-  //!check if there is winnr function
-  const checkWinner = () => {
+  //check if there is winner function
+  function checkWinner() {
     if (player1Hand.length > 0 && player2Hand.length === 0) {
       setWinner("player2");
       return;
@@ -255,7 +281,7 @@ export default function Game() {
       setWinner("player1");
       return;
     }
-  };
+  }
 
   return (
     <div>
