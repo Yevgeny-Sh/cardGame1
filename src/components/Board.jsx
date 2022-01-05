@@ -21,15 +21,29 @@ export default function Board(props) {
   };
   const renderLastTurnCard = () => {
     if (lastTurnCard) {
-      const tableCards = lastTurnCard.map((elm) => {
+      console.log(lastTurnCard);
+      if (
+        lastTurnCard.length > 1 &&
+        lastTurnCard[lastTurnCard.length - 1] !== undefined &&
+        lastTurnCard[lastTurnCard.length - 2] !== undefined
+      ) {
+        const tableCards = lastTurnCard.map((elm) => {
+          return (
+            <span key={elm.code}>
+              <img className="card-img" src={elm.image} alt="tableCard"></img>
+            </span>
+          );
+        });
+        return tableCards;
+      } else
         return (
-          <span key={elm.code}>
-            <img className="card-img" src={elm.image} alt="tableCard"></img>
-          </span>
+          <img
+            className="card-img"
+            src={lastTurnCard.image}
+            alt="tableCard"
+          ></img>
         );
-      });
-      return tableCards;
-    } else return <div></div>;
+    } else return <div>11</div>;
   };
   console.log(lastTurnCard);
   return (

@@ -301,7 +301,13 @@ export default function Game() {
       strong suit is :{renderStrongSuit()}
       <p>cards in deck:{deck.length}</p>
       {renderPlayer1Cards()}
-      <Board cardsOntable={table} lastTurnCard={GameLog[0]}></Board>
+      <Board
+        cardsOntable={table}
+        lastTurnCard={[
+          gameLog[gameLog.length - 1],
+          gameLog[gameLog.length - 2],
+        ]}
+      ></Board>
       {renderPlayer2Cards()}
       <div>game log:</div>
       <GameLog gameLog={gameLog}></GameLog>
