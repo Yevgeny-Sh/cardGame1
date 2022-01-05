@@ -7,6 +7,7 @@ import diamonds from "./diamonds.png";
 import hearts from "./hearts.png";
 import clubs from "./clubs.png";
 import spades from "./spades.png";
+import GameLog from "./GameLog";
 export default function Game() {
   //deck has array of 52 card objects..
   const [deck, setDeck] = useState([]);
@@ -15,6 +16,7 @@ export default function Game() {
   const [table, setTable] = useState([]);
   const [strongSuit, setStrongSuit] = useState("");
   const [winner, setWinner] = useState("");
+  const [gameLog, setGameLog] = useState([]);
 
   const strongSuitRandomChoice = () => {
     let arr = ["DIAMONDS", "CLUBS", "HEARTS", "SPADES"];
@@ -97,7 +99,6 @@ export default function Game() {
   };
   // renders player 2 hand..
   const renderPlayer2Cards = () => {
-    console.log(player2Hand);
     const cards = player2Hand.map((elm) => {
       return (
         <span key={elm.code} onClick={handleCardChoice}>
@@ -110,24 +111,19 @@ export default function Game() {
 
   //this is first attck from player
   const handleCardChoice = (event) => {
-    // if (turn === "player1")
-
     if (player1Hand.length > 0) {
       let newArr = player1Hand;
       newArr.forEach((element) => {
         if (element.image === event.target.src) {
           let index = newArr.indexOf(element);
-          console.log("player1 attacked with:", newArr[index]);
+          setGameLog((prevArray) => [...prevArray, element]);
+          //console.log("player1 attacked with:", newArr[index]);
           newArr.splice(index, 1);
-          //line below commented out -seems optional
-          // setPlayer1Hand(newArr);
+          //line below is - optional
+          setPlayer1Hand(newArr);
           setTable((prevArray) => [...prevArray, element]);
         }
       });
-      //!no ai play (until i fix bugs)
-      // if (player2Hand.length < 7) {
-      //   setTurn(`player2`);
-      // }
     }
     //take card from deck after throw
     if (deck.length > 0 && player1Hand.length < 6) {
@@ -204,6 +200,9 @@ export default function Game() {
               "ai found single card to edfend with",
               player2Hand[indexOfMatchToThrow]
             );
+            //!do like that
+            let newArr = [...gameLog, player2Hand[indexOfMatchToThrow]];
+            setGameLog(newArr);
             let newArrOfAiCards = player2Hand;
             newArrOfAiCards.splice(indexOfMatchToThrow, 1);
             setPlayer2Hand(newArrOfAiCards);
@@ -214,46 +213,51 @@ export default function Game() {
               setPlayer2Hand([...prePlayer2Hand, drawnCardFromDeck]);
             }
             setTable([]);
-            //Ai found mor then 1 card to defend with
+            //Ai found more then 1 card to defend with
           } else if (counterOfMatchesToThrow > 1) {
             //throw the first one for now
             //TODO make more complicated logic later
             let newArrOfAiCards = player2Hand;
+            let newArr = [...gameLog, player2Hand[indexOfMatchToThrow]];
+            setGameLog(newArr);
             newArrOfAiCards.splice(indexOfMatchToThrow, 1);
             //draw new card from deck
             if (deck.length > 0 && player2Hand.length < 6) {
               let drawnCardFromDeck = deck.pop();
               setPlayer2Hand([...newArrOfAiCards, drawnCardFromDeck]);
             }
+
             setTable([]);
             //! no reg card to defend
           } else if (
             counterOfMatchesToThrow === 0 &&
             table[0].suit !== strongSuit
           ) {
-            //! but try to defend with kozir
+            //! but try to defend with strong suit
             let FoundStrongSuitCard = player2Hand.find(
               (elm) => elm.suit === strongSuit
             );
             // if found strong suit in AI hand
             if (FoundStrongSuitCard !== undefined) {
-              console.log("AI has strong suit card to defend with");
               let indexOfMatchToThrow =
                 player2Hand.indexOf(FoundStrongSuitCard);
-              console.log("found strong card to throw :", FoundStrongSuitCard);
+              //console.log("found strong card to throw :", FoundStrongSuitCard);
+              let newArr = [...gameLog, FoundStrongSuitCard];
+              setGameLog(newArr);
               let newArrOfAiCards = player2Hand;
               newArrOfAiCards.splice(indexOfMatchToThrow, 1);
               setPlayer2Hand(newArrOfAiCards);
               setTable([]);
               //now draw card
               if (deck.length > 0 && player2Hand.length < 6) {
-                console.log("if is true,drawing");
                 let drawnCardFromDeck = deck.pop();
                 setPlayer2Hand([...newArrOfAiCards, drawnCardFromDeck]);
               }
               //no strong suit card found
             } else if (FoundStrongSuitCard === undefined) {
-              console.log("no strong suit card to AI, Ai needs to take card");
+              //console.log("no strong suit card to AI, Ai needs to take card");
+              // let newArr = [...gameLog, table[0]];
+              // setGameLog(newArr);
               let newArr2 = player2Hand;
               newArr2.push(table[0]);
               setPlayer2Hand(newArr2);
@@ -268,6 +272,8 @@ export default function Game() {
             let newArr3 = player2Hand;
             newArr3.push(table[0]);
             setPlayer2Hand(newArr3);
+            // let newArr = [...gameLog, table[0]];
+            // setGameLog(newArr);
             setTable([]);
           }
         }
@@ -295,8 +301,10 @@ export default function Game() {
       strong suit is :{renderStrongSuit()}
       <p>cards in deck:{deck.length}</p>
       {renderPlayer1Cards()}
-      <Board cardsOntable={table}></Board>
+      <Board cardsOntable={table} lastTurnCard={GameLog[0]}></Board>
       {renderPlayer2Cards()}
+      <div>game log:</div>
+      <GameLog gameLog={gameLog}></GameLog>
       {winner.length > 0 && <div className="winner">winner is {winner}</div>}
     </div>
   );

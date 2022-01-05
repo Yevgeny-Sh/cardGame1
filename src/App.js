@@ -9,7 +9,6 @@ function App() {
   return (
     <div className="app-main-container">
       <BrowserRouter>
-        {/* <HomePage></HomePage> */}
         <div>
           <Switch>
             <Route path="/" exact component={HomePage} />
@@ -19,8 +18,6 @@ function App() {
           </Switch>
         </div>
       </BrowserRouter>
-
-      {/* <Game></Game> */}
     </div>
   );
 }
