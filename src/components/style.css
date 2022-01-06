@@ -1,6 +1,10 @@
 @font-face {
   font-family: "candy";
-  src: url("candyFont.otf");
+  src: url(./assets/fonts/candyFont.otf);
+}
+@font-face {
+  font-family: "LuckiestGuy";
+  src: url(./assets/fonts/LuckiestGuy.ttf);
 }
 
 * {
@@ -14,9 +18,10 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
-  background-image: url(redQueenNoWriting.jpg);
+  align-items: center;
+  background-image: url(./assets/images/redQueenNoWriting.jpg);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
 }
 
 .card-img {
@@ -36,23 +41,44 @@
 
 .board-container {
   height: 40vmin;
-  width: 102vmin;
+  width: 100%;
   border: 2px solid black;
-  background-image: url(green-felt-casino-table-background.jpg);
+  background-image: url(./assets/images/green-felt-casino-table-background.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .home-container {
   position: relative;
+  /* background-image: url(./assets/images/redQueenNoWriting.jpg);
+  background-repeat: no-repeat;
+  background-size: contain; */
+}
+
+.game-container {
+  display: inline-flexbox;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.game-paragraph {
+  background: peachpuff;
+  text-align: center;
 }
 
 .instructions-btn {
   position: absolute;
   top: 60%;
-  left: 50%;
-  height: 15vmin;
-  width: 10vmin;
+  left: 45%;
+  height: 5vmin;
+  width: 15vmin;
+  white-space: nowrap;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   padding: 6px 14px;
@@ -67,7 +93,7 @@
 .play-btn {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 46.5%;
   height: 5vmin;
   width: 10vmin;
   display: flex;
@@ -86,6 +112,7 @@
   text-decoration: none;
 }
 .home-btn:hover {
+  transform: scale(1.5);
   box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2),
     0px 0.5px 1.5px rgba(54, 122, 246, 0.25),
     0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
@@ -104,19 +131,86 @@
   font-weight: 900;
   color: red;
   height: 80%;
-  /* background-color: #e0e1e4; */
 }
-
 .log-img {
   zoom: 0.2;
 }
-.log-container {
-  display: inline-block;
+.main-log-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+div.log-container {
+  display: flex;
+  flex-direction: row;
   background-color: lightgray;
+  justify-content: center;
+  width: 100%;
+}
+span.log-container {
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(241, 169, 169);
+  justify-content: center;
+}
+.winner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10%;
+  height: 60vh;
+  width: 60vw;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  background: #b5ddd1;
+  border-radius: 30px;
+}
+.winner-text {
+  text-align: center;
+}
+.winner-btn {
+  cursor: pointer;
+  height: 10%;
+  width: 10%;
+  border-radius: 5px;
+}
+
+.instructions-container {
+  display: flex;
+  flex-direction: column;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+.instructions-header {
+  position: absolute;
+  display: block;
+  height: inherit;
+  font-weight: 900;
+  font-size: xxx-large;
+  font-family: LuckiestGuy;
+}
+.instructions-img {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+}
+.instructions-text {
+  color: red;
+  background: white;
+  height: fit-content;
+  position: absolute;
+  top: 10%;
+  margin-bottom: 3rem;
 }
 
 /*  mobile version */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .card-img {
     zoom: 0.1;
   }

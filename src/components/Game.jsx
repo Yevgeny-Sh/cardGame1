@@ -3,11 +3,12 @@ import DeckOfCards from "./DeckOfCards";
 import axios from "axios";
 import "./style.css";
 import Board from "./Board";
-import diamonds from "./diamonds.png";
-import hearts from "./hearts.png";
-import clubs from "./clubs.png";
-import spades from "./spades.png";
+import diamonds from "./assets/images/diamonds.png";
+import hearts from "./assets/images/hearts.png";
+import clubs from "./assets/images/clubs.png";
+import spades from "./assets/images/spades.png";
 import GameLog from "./GameLog";
+import Winner from "./Winner";
 export default function Game() {
   //deck has array of 52 card objects..
   const [deck, setDeck] = useState([]);
@@ -50,7 +51,6 @@ export default function Game() {
     const { data } = await axios.get(
       `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=52`
     );
-
     setDeck(data.cards);
   };
 
@@ -101,7 +101,7 @@ export default function Game() {
   const renderPlayer2Cards = () => {
     const cards = player2Hand.map((elm) => {
       return (
-        <span key={elm.code} onClick={handleCardChoice}>
+        <span key={elm.code}>
           <img className="card-img" src={elm.image} alt="card" />
         </span>
       );
@@ -196,10 +196,6 @@ export default function Game() {
           });
           //assuming ai found a single card to defend with
           if (counterOfMatchesToThrow === 1) {
-            console.log(
-              "ai found single card to edfend with",
-              player2Hand[indexOfMatchToThrow]
-            );
             //!do like that
             let newArr = [...gameLog, player2Hand[indexOfMatchToThrow]];
             setGameLog(newArr);
@@ -226,14 +222,13 @@ export default function Game() {
               let drawnCardFromDeck = deck.pop();
               setPlayer2Hand([...newArrOfAiCards, drawnCardFromDeck]);
             }
-
             setTable([]);
-            //! no reg card to defend
+            // no regular card to defend
           } else if (
             counterOfMatchesToThrow === 0 &&
             table[0].suit !== strongSuit
           ) {
-            //! but try to defend with strong suit
+            // but try to defend with strong suit
             let FoundStrongSuitCard = player2Hand.find(
               (elm) => elm.suit === strongSuit
             );
@@ -256,14 +251,12 @@ export default function Game() {
               //no strong suit card found
             } else if (FoundStrongSuitCard === undefined) {
               //console.log("no strong suit card to AI, Ai needs to take card");
-              // let newArr = [...gameLog, table[0]];
-              // setGameLog(newArr);
               let newArr2 = player2Hand;
               newArr2.push(table[0]);
               setPlayer2Hand(newArr2);
               setTable([]);
             }
-            //! strong suit on table, and Ai cant defend
+            //strong suit on table, and Ai cant defend
           } else if (
             counterOfMatchesToThrow === 0 &&
             table[0].suit === strongSuit
@@ -272,8 +265,6 @@ export default function Game() {
             let newArr3 = player2Hand;
             newArr3.push(table[0]);
             setPlayer2Hand(newArr3);
-            // let newArr = [...gameLog, table[0]];
-            // setGameLog(newArr);
             setTable([]);
           }
         }
@@ -288,18 +279,28 @@ export default function Game() {
   //check if there is winner function
   function checkWinner() {
     if (player1Hand.length > 0 && player2Hand.length === 0) {
-      setWinner("player2");
-      return;
-    } else if (player2Hand.length > 0 && player1Hand.length === 0) {
       setWinner("player1");
-      return;
+    } else if (player2Hand.length > 0 && player1Hand.length === 0) {
+      setWinner("the red queen");
     }
   }
 
+  const newGameFunc = () => {
+    //?why u no work?
+    // setDeck([]);
+    // setPlayer1Hand([]);
+    // setPlayer2Hand([]);
+    // setTable([]);
+    // setStrongSuit("");
+    // setWinner("");
+    // setGameLog("");
+    window.location.reload();
+  };
+
   return (
-    <div>
-      strong suit is :{renderStrongSuit()}
-      <p>cards in deck:{deck.length}</p>
+    <div className="game-container">
+      <p className="game-paragraph">strong suit is :{renderStrongSuit()}</p>
+      <p className="game-paragraph">cards in deck:{deck.length}</p>
       {renderPlayer1Cards()}
       <Board
         cardsOntable={table}
@@ -309,9 +310,11 @@ export default function Game() {
         ]}
       ></Board>
       {renderPlayer2Cards()}
-      <div>game log:</div>
+      <div className="log-container">game log:</div>
       <GameLog gameLog={gameLog}></GameLog>
-      {winner.length > 0 && <div className="winner">winner is {winner}</div>}
+      {winner.length > 0 && (
+        <Winner winner={winner} newGameFunc={newGameFunc}></Winner>
+      )}
     </div>
   );
 }

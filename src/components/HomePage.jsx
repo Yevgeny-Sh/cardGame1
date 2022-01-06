@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-//import { BrowserRouter, Route, Link } from "react-router-dom";
-import redQueen from "./redQueenCropped.jpg";
+import redQueen from "./assets/images/redQueenCropped.jpg";
 
 export default function HomePage() {
   return (
